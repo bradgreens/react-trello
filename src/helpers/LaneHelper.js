@@ -74,16 +74,20 @@ const LaneHelper = {
     if (laneIndex < 0) {
       return state
     }
-    const cardIndex = state.lanes[laneIndex].cards.findIndex(x => x.id === card.id)
+    const lane = state.lanes[laneIndex];
+    const cardIndex = lane.cards.findIndex(x => x.id === card.id)
     if (cardIndex < 0) {
       return state
     }
+    // map partial updates onto the previous card state
+    const prevCard = lane.cards[cardIndex];
+    const newCard = { ...prevCard, ...card };
     return update(state, {
       lanes: {
         [laneIndex]: {
           cards: {
             [cardIndex]: {
-              $set: card
+              $set: newCard
             }
           }
         }
